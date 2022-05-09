@@ -39,5 +39,10 @@ namespace BattleshipLibrary
             };
             model.ShotGrid.Add(spot);
         }
+
+        public static bool PlaceShip(PlayerInfoModel model, string location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
