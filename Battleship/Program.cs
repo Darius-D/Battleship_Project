@@ -20,24 +20,64 @@ namespace Battleship
 
             do
             {
-                //Display grid from activePlayer on where they fired
+               
                 DisplayShotGrid(activePlayer);
-                //Ask player 1 fire for a shot
 
-                //determine is shot was valid
+                RecordPlayerSHot(activePlayer, opponent);
 
-                //Determine shot results
+                bool doesGameContinue = GameLogic.PLayerStillActive(opponent);
 
-                //determine is game is over
-
-                //if over set player 1 as winner
-                //else swap positions
-
+                if (doesGameContinue == true) 
+                {
+                    (activePlayer, opponent) = (opponent, activePlayer);
+                }
+                else
+                {
+                    Winner = activePlayer;
+                }
 
             } while (Winner == null);
 
+            IdentifyWinner(Winner);
 
             Console.ReadLine();
+        }
+
+        private static void IdentifyWinner(PlayerInfoModel winner)
+        {
+            Console.WriteLine($"Congratulations {winner}, You Won!!");
+            Console.WriteLine($"{winner.UsersName} took {GameLogic.GetShotCount(winner)} shots.");
+        }
+
+        private static void RecordPlayerSHot(PlayerInfoModel activePlayer, PlayerInfoModel opponent)
+        {
+            bool isValidShot = false;
+            string row = string.Empty;
+            int column;
+
+            do
+            {
+                string shot = AskForShot();
+                (row, column) = GameLogic.splitShotIntoRowAndColumn(shot);
+                isValidShot = GameLogic.ValidateShot(row, column, activePlayer);
+
+                if(isValidShot == false)
+                {
+                    Console.WriteLine($"Your shot of {shot} was Invalid. Please try again.");
+                }
+                
+            } while (isValidShot == false);
+
+            bool isAHit = GameLogic.IdentifyShotResult(opponent, row, column);
+
+            GameLogic.MarkShotResult(activePlayer, row, column, isAHit);
+        }
+
+        private static string AskForShot()
+        {
+            Console.Write("Where would you like to shoot? IE. 'B2' :");
+            var ShotPlacement = Console.ReadLine();
+            return ShotPlacement;
         }
 
         private static void DisplayShotGrid(PlayerInfoModel activePlayer)
@@ -55,6 +95,17 @@ namespace Battleship
                 if(gridspot.Status == GridSpotStatus.Empty)
                 {
                     Console.Write($" {gridspot.SpotLetter}{gridspot.SpotNumber} ");
+                }else if(gridspot.Status == GridSpotStatus.Hit)
+                {
+                    Console.Write(" X ");
+                }
+                else if (gridspot.Status == GridSpotStatus.Miss)
+                {
+                    Console.Write(" O ");
+                }
+                else
+                {
+                    Console.Write(" ? "); //Something went wrong if this populates
                 }
             }
         }
