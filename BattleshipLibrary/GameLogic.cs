@@ -155,7 +155,8 @@ namespace BattleshipLibrary
             {
                 if (ship.SpotLetter == row.ToUpper() && ship.SpotNumber == column)
                 {
-                    isAHit = false;
+                    isAHit = true;
+                    ship.Status = GridSpotStatus.Sunk;
                 }
             }
             return isAHit;

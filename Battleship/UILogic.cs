@@ -12,7 +12,7 @@ namespace Battleship
     {
         public static void IdentifyWinner(PlayerInfoModel winner)
         {
-            Console.WriteLine($"Congratulations {winner}, You Won!!");
+            Console.WriteLine($"Congratulations {winner.UsersName}, You Won!!");
             Console.WriteLine($"{winner.UsersName} took {GameLogic.GetShotCount(winner)} shots.");
         }
 
@@ -20,17 +20,26 @@ namespace Battleship
         {
             bool isValidShot = false;
             string row = string.Empty;
-            int column;
+            int column = 0;
 
             do
             {
-                string shot = AskForShot();
-                (row, column) = GameLogic.splitShotIntoRowAndColumn(shot);
-                isValidShot = GameLogic.ValidateShot(row, column, activePlayer);
+                string shot = AskForShot(activePlayer);
+                try
+                {
+                    (row, column) = GameLogic.splitShotIntoRowAndColumn(shot);
+                    isValidShot = GameLogic.ValidateShot(row, column, activePlayer);
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine($"Error {ex.Message}");
+                    isValidShot = false;
+                }
 
                 if (isValidShot == false)
                 {
-                    Console.WriteLine($"Your shot of {shot} was Invalid. Please try again.");
+                    Console.WriteLine($"{activePlayer.UsersName} shot of {shot} was Invalid. Please try again.");
                 }
 
             } while (isValidShot == false);
@@ -40,9 +49,9 @@ namespace Battleship
             GameLogic.MarkShotResult(activePlayer, row, column, isAHit);
         }
 
-        public static string AskForShot()
+        public static string AskForShot(PlayerInfoModel activePlayer)
         {
-            Console.Write("\n Where would you like to shoot? ");
+            Console.Write($"\n {activePlayer.UsersName} where would you like to shoot? ");
             var ShotPlacement = Console.ReadLine();
             return ShotPlacement;
         }
@@ -65,15 +74,16 @@ namespace Battleship
                 }
                 else if (gridspot.Status == GridSpotStatus.Hit)
                 {
-                    Console.Write(" X ");
+                    Console.Write(" X  ");
+                    
                 }
                 else if (gridspot.Status == GridSpotStatus.Miss)
                 {
-                    Console.Write(" O ");
+                    Console.Write(" O  ");
                 }
                 else
                 {
-                    Console.Write(" ? "); //Something went wrong if this populates
+                    Console.Write(" ?  "); //Something went wrong if this populates
                 }
             }
         }
@@ -119,8 +129,17 @@ namespace Battleship
             {
                 Console.Write($"Where would you like to place ship number {model.ShipLocations.Count + 1}?: ");
                 string location = Console.ReadLine();
+                bool isValidLocation = false;
 
-                bool isValidLocation = GameLogic.PlaceShip(model, location);
+                try
+                {
+                    isValidLocation = GameLogic.PlaceShip(model, location);
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine($"Error {ex.Message}");
+                }
 
                 if (!isValidLocation)
                 {
