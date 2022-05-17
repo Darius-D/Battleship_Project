@@ -42,7 +42,7 @@ namespace Battleship
 
         public static string AskForShot()
         {
-            Console.Write("Where would you like to shoot? IE. 'B2' :");
+            Console.Write("\n Where would you like to shoot? ");
             var ShotPlacement = Console.ReadLine();
             return ShotPlacement;
         }
