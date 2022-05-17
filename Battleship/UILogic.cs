@@ -24,13 +24,13 @@ namespace Battleship
 
             do
             {
-                string shot = AskForShot();
+                string shot = AskForShot(activePlayer);
                 (row, column) = GameLogic.splitShotIntoRowAndColumn(shot);
                 isValidShot = GameLogic.ValidateShot(row, column, activePlayer);
 
                 if (isValidShot == false)
                 {
-                    Console.WriteLine($"Your shot of {shot} was Invalid. Please try again.");
+                    Console.WriteLine($"{activePlayer.UsersName} shot of {shot} was Invalid. Please try again.");
                 }
 
             } while (isValidShot == false);
@@ -40,9 +40,9 @@ namespace Battleship
             GameLogic.MarkShotResult(activePlayer, row, column, isAHit);
         }
 
-        public static string AskForShot()
+        public static string AskForShot(PlayerInfoModel activePlayer)
         {
-            Console.Write("\n Where would you like to shoot? ");
+            Console.Write($"\n {activePlayer.UsersName} where would you like to shoot? ");
             var ShotPlacement = Console.ReadLine();
             return ShotPlacement;
         }
