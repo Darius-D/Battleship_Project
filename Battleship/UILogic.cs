@@ -47,6 +47,16 @@ namespace Battleship
             bool isAHit = GameLogic.IdentifyShotResult(opponent, row, column);
 
             GameLogic.MarkShotResult(activePlayer, row, column, isAHit);
+
+            DisplayShotResults(row, column, isAHit);
+        }
+
+        private static void DisplayShotResults(string row, int column, bool isAHit)
+        {
+            string result = isAHit ? "Hit" : "Missed";
+
+          
+            Console.WriteLine($"\t You {result} at {row.ToUpper()}{column}! \n");
         }
 
         public static string AskForShot(PlayerInfoModel activePlayer)
